@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		6011A2342F65C69D003EDC46 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 6011A2332F65C69D003EDC46 /* FirebaseAuth */; };
+		6011A2362F65C6A4003EDC46 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 6011A2352F65C6A4003EDC46 /* FirebaseFirestore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		6011A1E82F65C038003EDC46 /* YDB-APP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "YDB-APP.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +28,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6011A2342F65C69D003EDC46 /* FirebaseAuth in Frameworks */,
+				6011A2362F65C6A4003EDC46 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +40,7 @@
 			isa = PBXGroup;
 			children = (
 				6011A1EA2F65C038003EDC46 /* YDB-APP */,
+				6011A2322F65C69D003EDC46 /* Frameworks */,
 				6011A1E92F65C038003EDC46 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +51,13 @@
 				6011A1E82F65C038003EDC46 /* YDB-APP.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		6011A2322F65C69D003EDC46 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +80,8 @@
 			);
 			name = "YDB-APP";
 			packageProductDependencies = (
+				6011A2332F65C69D003EDC46 /* FirebaseAuth */,
+				6011A2352F65C6A4003EDC46 /* FirebaseFirestore */,
 			);
 			productName = "YDB-APP";
 			productReference = 6011A1E82F65C038003EDC46 /* YDB-APP.app */;
@@ -94,6 +111,9 @@
 			);
 			mainGroup = 6011A1DF2F65C038003EDC46;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6011A2312F65C4E6003EDC46 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6011A1E92F65C038003EDC46 /* Products */;
 			projectDirPath = "";
@@ -253,6 +273,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "YDB needs the camera to scan your food for nutrition analysis.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "YDB needs access to your photos to analyze your meals.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +306,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "YDB needs the camera to scan your food for nutrition analysis.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "YDB needs access to your photos to analyze your meals.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -328,6 +352,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6011A2312F65C4E6003EDC46 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6011A2332F65C69D003EDC46 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6011A2312F65C4E6003EDC46 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		6011A2352F65C6A4003EDC46 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6011A2312F65C4E6003EDC46 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6011A1E02F65C038003EDC46 /* Project object */;
 }
