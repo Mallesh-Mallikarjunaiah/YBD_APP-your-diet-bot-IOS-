@@ -1,0 +1,10 @@
+# Secrets
+Secrets.plist
+GoogleService-Info.plist
+
+# Xcode
+build/
+*.xcuserstate
+*.xcuserdata
+DerivedData/
+.DS_Store
