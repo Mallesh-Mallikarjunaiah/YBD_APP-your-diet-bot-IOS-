@@ -5,8 +5,20 @@ import UIKit
 class NutritionService {
     static let shared = NutritionService()
     
-    // Replace "YOUR_API_KEY" with your actual Gemini API Key from Google AI Studio
-    private let model = GenerativeModel(name: "gemini-1.5-flash", apiKey: "AIzaSyDEj09XBCE7DibsGYKp7eNLqaAL-bxQx3Y")
+    // 1. Fetch the API Key from Secrets.plist
+    private var apiKey: String {
+        guard let filePath = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
+              let plist = NSDictionary(contentsOfFile: filePath),
+              let value = plist.object(forKey: "GEMINI_API_KEY") as? String else {
+            // This will help you debug if the file or key is missing
+            print("⚠️ Error: GEMINI_API_KEY not found in Secrets.plist")
+            return ""
+        }
+        return value
+    }
+    
+    // 2. Use 'lazy' so it doesn't try to load the key until the first time it's used
+    private lazy var model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey)
     
     func analyzeFoodImage(image: UIImage, completion: @escaping (String?) -> Void) {
         let prompt = """
