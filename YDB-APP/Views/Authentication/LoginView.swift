@@ -1,82 +1,49 @@
 import SwiftUI
 
 struct LoginView: View {
+    @EnvironmentObject var authViewModel: AuthViewModel
     @State private var email = ""
     @State private var password = ""
-    @State private var errorMessage = ""
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 25) {
-                // YDB Logo
-                VStack {
-                    Image(systemName: "leaf.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 80, height: 80)
-                        .foregroundColor(.green)
-                    
-                    Text("YDB")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                    Text("Your Diet Bot")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                }
-                .padding(.top, 50)
+            VStack(spacing: 20) {
+                Text("Welcome to YDB")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding(.bottom, 40)
                 
-                // Login Fields
-                VStack(spacing: 15) {
-                    TextField("Email", text: $email)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                        .autocapitalization(.none)
-                    
-                    SecureField("Password", text: $password)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .cornerRadius(10)
-                }
-                .padding(.horizontal)
+                TextField("Email", text: $email)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)
+                    .keyboardType(.emailAddress)
                 
-                if !errorMessage.isEmpty {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .font(.caption)
+                SecureField("Password", text: $password)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                if let error = authViewModel.errorMessage {
+                    Text(error).foregroundColor(.red).font(.caption).multilineTextAlignment(.center)
                 }
                 
-                // Login Button
-                Button(action: loginUser) {
+                Button(action: {
+                    authViewModel.login(email: email, password: password)
+                }) {
                     Text("Login")
-                        .font(.headline)
-                        .foregroundColor(.white)
+                        .bold()
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.blue)
+                        .foregroundColor(.white)
                         .cornerRadius(10)
                 }
-                .padding(.horizontal)
-                
-                // Link to Signup
-                NavigationLink(destination: ProfileSetupView()) {
-                    Text("Don't have an account? Sign Up")
-                        .font(.footnote)
-                        .foregroundColor(.blue)
-                }
+                .padding(.top, 10)
                 
                 Spacer()
+                
+                NavigationLink("Don't have an account? Sign Up", destination: SignUpView())
+                    .foregroundColor(.blue)
             }
-        }
-    }
-    
-    func loginUser() {
-        AuthService.shared.login(email: email, password: password) { result in
-            switch result {
-            case .success:
-                print("Login Success!")
-            case .failure(let error):
-                self.errorMessage = error.localizedDescription
-            }
+            .padding()
         }
     }
 }

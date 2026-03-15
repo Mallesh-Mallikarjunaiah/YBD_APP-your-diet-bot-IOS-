@@ -1,18 +1,48 @@
 import SwiftUI
-
+import FirebaseAuth
 struct HomeView: View {
-    // These would eventually come from your UserProfile model
+    
+    @EnvironmentObject var authViewModel: AuthViewModel
+    
     let dailyGoal: Double = 2200
     @State private var consumed: Double = 1450
     
     var body: some View {
+        
         ScrollView {
+            
             VStack(alignment: .leading, spacing: 25) {
-                // 1. Daily Progress Ring
+                
+                // USER DASHBOARD CARD
+                VStack(alignment: .leading, spacing: 10) {
+                    
+                    HStack {
+                        Image(systemName: "person.circle.fill")
+                            .font(.system(size: 50))
+                            .foregroundColor(.blue)
+                        
+                        VStack(alignment: .leading) {
+                            Text("Welcome")
+                                .font(.headline)
+                            
+                            Text(authViewModel.userSession?.email ?? "User")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(20)
+                
+                
+                // Daily Progress Ring
                 HStack {
+                    
                     ZStack {
                         Circle()
                             .stroke(Color.gray.opacity(0.2), lineWidth: 20)
+                        
                         Circle()
                             .trim(from: 0, to: CGFloat(consumed / dailyGoal))
                             .stroke(Color.green, style: StrokeStyle(lineWidth: 20, lineCap: .round))
@@ -21,8 +51,10 @@ struct HomeView: View {
                         VStack {
                             Text("\(Int(dailyGoal - consumed))")
                                 .font(.system(size: 40, weight: .bold))
+                            
                             Text("kcal left")
-                                .font(.caption).foregroundColor(.gray)
+                                .font(.caption)
+                                .foregroundColor(.gray)
                         }
                     }
                     .frame(width: 180, height: 180)
@@ -37,10 +69,12 @@ struct HomeView: View {
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(20)
-
-                // 2. Meal Suggestions Section
+                
+                
+                // Diet Chart
                 Text("Today's Diet Chart")
-                    .font(.title2).bold()
+                    .font(.title2)
+                    .bold()
                 
                 VStack(spacing: 15) {
                     MealRow(time: "Breakfast", suggestion: "Oats with protein powder & berries", icon: "sun.max.fill")
@@ -48,8 +82,10 @@ struct HomeView: View {
                     MealRow(time: "Dinner", suggestion: "Baked fish & steamed broccoli", icon: "moon.stars.fill")
                 }
                 
-                // 3. The "AI Bot" Action Button
+                
+                // Scan Meal Button
                 NavigationLink(destination: CameraView()) {
+                    
                     HStack {
                         Image(systemName: "camera.fill")
                         Text("Scan My Meal to Find Nutrition")
@@ -66,44 +102,15 @@ struct HomeView: View {
         }
         .navigationTitle("Dashboard")
         .navigationBarBackButtonHidden(true)
-    }
-}
-
-// Reusable Components
-struct MacroMiniProgress: View {
-    let label: String
-    let color: Color
-    let value: Double
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(label).font(.caption).bold()
-            ProgressView(value: value)
-                .accentColor(color)
-                .scaleEffect(x: 1, y: 2, anchor: .center)
-        }
-    }
-}
-
-struct MealRow: View {
-    let time: String
-    let suggestion: String
-    let icon: String
-    
-    var body: some View {
-        HStack(spacing: 15) {
-            Image(systemName: icon)
-                .foregroundColor(.blue)
-                .frame(width: 30)
-            VStack(alignment: .leading) {
-                Text(time).font(.headline)
-                Text(suggestion).font(.subheadline).foregroundColor(.gray)
+        
+        // LOGOUT BUTTON
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Logout") {
+                    authViewModel.signOut()
+                }
+                .foregroundColor(.red)
             }
-            Spacer()
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
     }
 }

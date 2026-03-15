@@ -3,36 +3,55 @@ import GoogleGenerativeAI
 import UIKit
 
 class NutritionService {
+    
     static let shared = NutritionService()
     
-    // 1. Fetch the API Key from Secrets.plist
+    // MARK: - API Key
     private var apiKey: String {
         guard let filePath = Bundle.main.path(forResource: "Secrets", ofType: "plist"),
               let plist = NSDictionary(contentsOfFile: filePath),
               let value = plist.object(forKey: "GEMINI_API_KEY") as? String else {
-            // This will help you debug if the file or key is missing
             print("⚠️ Error: GEMINI_API_KEY not found in Secrets.plist")
             return ""
         }
         return value
     }
     
-    // 2. Use 'lazy' so it doesn't try to load the key until the first time it's used
-    private lazy var model = GenerativeModel(name: "gemini-1.5-flash", apiKey: apiKey)
+    // MARK: - Gemini Model
+    private lazy var model = GenerativeModel(
+        name: "gemini-2.5-flash",
+        apiKey: apiKey
+    )
     
+    
+    // MARK: - AI Food Analysis
     func analyzeFoodImage(image: UIImage, completion: @escaping (String?) -> Void) {
+        
         let prompt = """
-        Analyze this food image. Provide the response in JSON format:
+        Analyze this food image and estimate its nutrition.
+
+        Return ONLY JSON in the following format:
+
         {
-          "food_name": "name",
+          "food_name": "Dish name",
           "calories": 0,
           "protein": 0,
           "carbs": 0,
           "fat": 0,
+          "sugar": 0,
+          "fiber": 0,
+          "sodium_mg": 0,
           "health_score": 0,
-          "advice": "one sentence advice"
+          "ingredients": ["ingredient1", "ingredient2"],
+          "advice": "One sentence advice to make this meal healthier."
         }
-        The health_score should be from 0 to 100 based on nutritional density.
+
+        Rules:
+        - health_score must be between 0 and 100
+        - macros must be grams
+        - sodium should be mg
+        - ingredients should be visible ingredients in the food
+        - return JSON only (no explanation, no markdown)
         """
         
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
@@ -40,11 +59,17 @@ class NutritionService {
             return
         }
         
-        let parts = [ModelContent.Part.text(prompt), ModelContent.Part.data(mimetype: "image/jpeg", imageData)]
+        let content = ModelContent(
+            role: "user",
+            parts: [
+                .text(prompt),
+                .data(mimetype: "image/jpeg", imageData)
+            ]
+        )
         
         Task {
             do {
-                let response = try await model.generateContent(parts)
+                let response = try await model.generateContent([content])
                 completion(response.text)
             } catch {
                 print("AI Error: \(error)")

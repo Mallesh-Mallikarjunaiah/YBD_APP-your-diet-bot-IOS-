@@ -1,49 +1,52 @@
 import SwiftUI
 
 struct ProfileSetupView: View {
-    @State private var gender: Gender = .male
-    @State private var age: String = ""
-    @State private var height: String = ""
-    @State private var weight: String = ""
-    @State private var activity: ActivityLevel = .moderatelyActive
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @State private var age = ""
+    @State private var weight = ""
+    @State private var height = ""
+    @State private var goal = "Lose Weight"
+    let goals = ["Lose Weight", "Maintain", "Gain Muscle"]
     
     var body: some View {
-        Form {
-            Section(header: Text("Physical Metrics")) {
-                Picker("Gender", selection: $gender) {
-                    ForEach(Gender.allCases, id: \.self) { gender in
-                        Text(gender.rawValue).tag(gender)
-                    }
+        VStack(spacing: 25) {
+            Text("Complete Your Profile")
+                .font(.largeTitle).bold()
+            
+            Text("Let's personalize your diet plan")
+                .foregroundColor(.gray)
+            
+            VStack(alignment: .leading) {
+                Text("Age").font(.headline)
+                TextField("e.g. 25", text: $age).textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                Text("Weight (kg)").font(.headline).padding(.top)
+                TextField("e.g. 70", text: $weight).textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                Text("Your Goal").font(.headline).padding(.top)
+                Picker("Goal", selection: $goal) {
+                    ForEach(goals, id: \.self) { Text($0) }
                 }
                 .pickerStyle(SegmentedPickerStyle())
-                
-                TextField("Age", text: $age)
-                    .keyboardType(.numberPad)
-                
-                TextField("Height (cm)", text: $height)
-                    .keyboardType(.decimalPad)
-                
-                TextField("Weight (kg)", text: $weight)
-                    .keyboardType(.decimalPad)
             }
+            .padding()
             
-            Section(header: Text("Workout Intensity")) {
-                Picker("Activity Level", selection: $activity) {
-                    Text("Sedentary").tag(ActivityLevel.sedentary)
-                    Text("Lightly Active").tag(ActivityLevel.lightlyActive)
-                    Text("Moderate").tag(ActivityLevel.moderatelyActive)
-                    Text("Very Active").tag(ActivityLevel.veryActive)
-                }
+            Button(action: {
+                // Here you would save to Firestore, for now we skip to the app
+                authViewModel.isProfileCompleted = true
+            }) {
+                Text("Start My Journey")
+                    .bold()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
             }
+            .padding(.horizontal)
             
-            Section {
-                NavigationLink(destination: DietaryRestrictionsView()) {
-                    Text("Next: Dietary Restrictions")
-                        .bold()
-                        .foregroundColor(.blue)
-                }
-            }
+            Spacer()
         }
-        .navigationTitle("Profile Setup")
+        .padding()
     }
 }
